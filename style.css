@@ -522,7 +522,7 @@ html,body{
     top: 0%;
     background: #EEAECA;
     background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -582,3 +582,14 @@ html,body{
     transform: translate(0.5px,0.5px);
 }
 
+#weather-btn{
+    width: 20%;
+    height: 10%;
+    border-radius: 0.5vw;
+    border: none;
+    transition: 0.3s ease-in-out;
+
+}#weather-btn:hover{
+    box-shadow:  0 0 15px white;
+    transform: translate(1px,1px);
+}

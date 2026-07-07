@@ -314,46 +314,82 @@ getQuote();
 
 
 //Weather API
+const weather_menu=document.querySelector(".weather-menu");
 const weatherBtn = document.querySelector("#weather-btn");
 const cityName = document.querySelector("#city-name");
 const weatherCondition = document.querySelector("#weather-condition");
 const temperature = document.querySelector("#temperature");
+const weat_back=document.querySelector("#weat-back");
+const opt_weat=document.querySelector(".opt-weat")
+weat_back.addEventListener("click",()=>{
+    weather_menu.style.display="none"
+});
+opt_weat.addEventListener("click",()=>{
+    weather_menu.style.display="flex"
 
+})
 const apiKey = "347c1757e128ff7f3d023d627b9c20f6";
 
-async function getWeather(){
+async function getWeather() {
+
     cityName.textContent = "Loading...";
+    weatherCondition.textContent = "";
+    temperature.textContent = "";
+
+    if (!navigator.geolocation) {
+        cityName.textContent = "Geolocation not supported";
+        return;
+    }
 
     navigator.geolocation.getCurrentPosition(
-        async (position) => {
-            try{
-                let lat = position.coords.latitude;
-                let lon = position.coords.longitude;
 
-                let response = await fetch(
+        async (position) => {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            try {
+
+                const response = await fetch(
                     `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
                 );
 
-                if(!response.ok){
-                    throw new Error("Weather API request failed");
+                const data = await response.json();
+
+                console.log(data); // Check the response in Console
+
+                if (!response.ok) {
+                    throw new Error(data.message);
                 }
 
-                let data = await response.json();
-
                 cityName.textContent = data.name;
-                weatherCondition.textContent = data.weather[0].main;
+                weatherCondition.textContent = data.weather[0].description.toUpperCase();
                 temperature.textContent = `${Math.round(data.main.temp)}°C`;
-            }
-            catch(error){
+
+            } catch (error) {
+
                 cityName.textContent = "Weather unavailable";
-                console.log(error);
+                weatherCondition.textContent = "";
+                temperature.textContent = "";
+
+                console.error(error);
+
             }
+
         },
+
         (error) => {
+
             cityName.textContent = "Location access denied";
-            console.log(error);
+            weatherCondition.textContent = "";
+            temperature.textContent = "";
+
+            console.error(error);
+
         }
+
     );
+
 }
 
 weatherBtn.addEventListener("click", getWeather);
